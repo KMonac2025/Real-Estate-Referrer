@@ -79,6 +79,29 @@ html{
   opacity: 1;
   transform: scale(1.1);
 }
+
+.loader {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(37, 99, 235, 0.2);
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-container {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
 </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -148,7 +171,11 @@ html{
 
 <!-- Main Content -->
 <main class="lg:col-span-3 space-y-6" id="main-content">
-<!-- Content will be populated by JS -->
+<!-- Loading indicator -->
+<div class="loading-container">
+<div class="loader"></div>
+<p class="text-gray-600">Loading translations...</p>
+</div>
 </main>
 
 </div>
@@ -194,34 +221,52 @@ html{
 </footer>
 
 <script>
+let translationsLoaded = false;
+
 // Initialize i18next
 async function initI18n() {
-  await i18next
-    .use(i18nextHttpBackend)
-    .use(i18nextBrowserLanguageDetector)
-    .init({
-      fallbackLng: 'fr',
-      debug: false,
-      load: 'languageOnly',
-      ns: ['terms'],
-      defaultNS: 'terms',
-      backend: {
-        loadPath: '/locales/{{lng}}/{{ns}}.json'
-      },
-      detection: {
-        order: ['localStorage', 'navigator'],
-        caches: ['localStorage']
-      }
-    });
+  try {
+    await i18next
+      .use(i18nextHttpBackend)
+      .use(i18nextBrowserLanguageDetector)
+      .init({
+        fallbackLng: 'fr',
+        debug: true,
+        load: 'languageOnly',
+        ns: ['terms'],
+        defaultNS: 'terms',
+        backend: {
+          loadPath: '/locales/{{lng}}/{{ns}}.json'
+        },
+        detection: {
+          order: ['localStorage', 'navigator'],
+          caches: ['localStorage']
+        }
+      });
 
-  updateContent();
+    // Wait for translations to be fully loaded
+    await i18next.loadNamespaces('terms');
+    
+    translationsLoaded = true;
+    console.log('Translations loaded successfully');
+    updateContent();
+  } catch (error) {
+    console.error('Error loading translations:', error);
+    document.getElementById('main-content').innerHTML = `
+      <div class="glass-card rounded-xl p-8 border-l-4 border-red-500">
+        <p class="text-red-600">Error loading translations. Please refresh the page.</p>
+      </div>
+    `;
+  }
 }
 
 // Change language function
 window.changeLanguage = async function(langCode) {
   try {
     await i18next.changeLanguage(langCode);
+    await i18next.loadNamespaces('terms');
     localStorage.setItem('i18nextLng', langCode);
+    translationsLoaded = true;
     updateContent();
     updateActiveFlag(langCode);
   } catch (error) {
@@ -244,17 +289,45 @@ function updateActiveFlag(langCode) {
   }
 }
 
-// Translation helper
-function t(key) {
-  return i18next.t(key);
+// Translation helper with safety check
+function t(key, options = {}) {
+  if (!translationsLoaded) {
+    console.warn('Translations not yet loaded');
+    return key;
+  }
+  const translation = i18next.t(key, options);
+  return translation || key;
+}
+
+// Safe array rendering helper
+function renderList(items, ordered = false) {
+  if (!Array.isArray(items)) {
+    console.warn('renderList: items is not an array', items);
+    return '';
+  }
+  const tag = ordered ? 'ol' : 'ul';
+  const className = ordered ? 'list-decimal' : 'list-disc';
+  return `<${tag} class="${className} list-inside text-gray-700 ml-4 space-y-1">
+    ${items.map(item => `<li>${item}</li>`).join('')}
+  </${tag}>`;
 }
 
 // Update all content
 function updateContent() {
+  if (!translationsLoaded) {
+    console.warn('Attempt to update content before translations loaded');
+    return;
+  }
+
+  // Update simple text elements
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
-    element.innerHTML = t(key);
+    const translation = t(key);
+    if (translation && translation !== key) {
+      element.innerHTML = translation;
+    }
   });
+  
   updateTOC();
   updateMainContent();
   updateActiveFlag(i18next.language);
@@ -279,11 +352,14 @@ function updateTOC() {
     { id: 'contact', key: 'toc.items.contact' }
   ];
 
-  tocNav.innerHTML = items.map(item => `
-    <a href="#${item.id}" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">
-      ${t(item.key)}
-    </a>
-  `).join('');
+  tocNav.innerHTML = items.map(item => {
+    const text = t(item.key);
+    return `
+      <a href="#${item.id}" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">
+        ${text}
+      </a>
+    `;
+  }).join('');
 }
 
 // Update main content
@@ -319,9 +395,7 @@ function updateMainContent() {
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section2.eligibility.title')}</h3>
           <p class="text-gray-700">${t('section2.eligibility.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section2.eligibility.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section2.eligibility.items', { returnObjects: true }))}
         </div>
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section2.validation.title')}</h3>
@@ -340,16 +414,12 @@ function updateMainContent() {
         <div>
           <h3 class="font-bold text-gray-900 mb-2"><i class="fas fa-cogs text-[#1e3a8a] mr-2"></i>${t('section3.functioning.title')}</h3>
           <p class="text-gray-700 mb-2">${t('section3.functioning.intro')}</p>
-          <ol class="list-decimal list-inside text-gray-700 ml-4 space-y-2">
-            ${t('section3.functioning.steps', { returnObjects: true }).map(step => `<li>${step}</li>`).join('')}
-          </ol>
+          ${renderList(t('section3.functioning.steps', { returnObjects: true }), true)}
         </div>
         <div>
           <h3 class="font-bold text-gray-900 mb-2"><i class="fas fa-star text-yellow-500 mr-2"></i>${t('section3.qualification.title')}</h3>
           <p class="text-gray-700 mb-2">${t('section3.qualification.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-            ${t('section3.qualification.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section3.qualification.items', { returnObjects: true }))}
           <div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded mt-3">
             <p class="text-sm text-gray-700"><i class="fas fa-exclamation-triangle text-[#2563eb] mr-2"></i><strong>${t('section3.qualification.important')}</strong> ${t('section3.qualification.note')}</p>
           </div>
@@ -365,9 +435,7 @@ function updateMainContent() {
           <p class="text-gray-700 mb-3">${t('section4.rate.text')} <strong class="text-green-600 text-xl">${t('section4.rate.percentage')}</strong> ${t('section4.rate.text2')}</p>
           <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
             <p class="font-bold text-gray-900 mb-2">${t('section4.rate.exampleTitle')}</p>
-            <ul class="text-sm text-gray-700 space-y-1">
-              ${t('section4.rate.exampleItems', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-            </ul>
+            ${renderList(t('section4.rate.exampleItems', { returnObjects: true }))}
           </div>
         </div>
         <div>
@@ -381,9 +449,7 @@ function updateMainContent() {
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section4.nonPayment.title')}</h3>
           <p class="text-gray-700">${t('section4.nonPayment.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section4.nonPayment.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section4.nonPayment.items', { returnObjects: true }))}
         </div>
       </div>
     </div>
@@ -394,9 +460,7 @@ function updateMainContent() {
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section5.rera.title')}</h3>
           <p class="text-gray-700">${t('section5.rera.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section5.rera.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section5.rera.items', { returnObjects: true }))}
         </div>
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section5.confidentiality.title')}</h3>
@@ -413,9 +477,7 @@ function updateMainContent() {
         <div class="bg-red-50 border-2 border-red-500 p-4 rounded-lg">
           <h3 class="font-bold text-red-900 mb-2 text-lg"><i class="fas fa-exclamation-circle mr-2"></i>${t('section5.consent.title')}</h3>
           <p class="text-gray-800 font-semibold mb-2">${t('section5.consent.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section5.consent.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section5.consent.items', { returnObjects: true }))}
           <p class="text-red-800 font-bold mt-3 text-sm">${t('section5.consent.warning')}</p>
         </div>
       </div>
@@ -458,9 +520,7 @@ function updateMainContent() {
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section8.byAgent.title')}</h3>
           <p class="text-gray-700">${t('section8.byAgent.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section8.byAgent.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section8.byAgent.items', { returnObjects: true }))}
         </div>
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section8.effects.title')}</h3>
@@ -475,9 +535,7 @@ function updateMainContent() {
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section9.limitations.title')}</h3>
           <p class="text-gray-700">${t('section9.limitations.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section9.limitations.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section9.limitations.items', { returnObjects: true }))}
         </div>
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section9.exclusions.title')}</h3>
@@ -493,13 +551,9 @@ function updateMainContent() {
           <h3 class="font-bold text-gray-900 mb-2">${t('section10.collection.title')}</h3>
           <p class="text-gray-700 mb-2">${t('section10.collection.intro')}</p>
           <p class="text-gray-700 font-semibold mb-2"><u>${t('section10.collection.referrersLabel')}</u></p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-            ${t('section10.collection.referrersItems', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section10.collection.referrersItems', { returnObjects: true }))}
           <p class="text-gray-700 font-semibold mb-2 mt-3"><u>${t('section10.collection.leadsLabel')}</u></p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-            ${t('section10.collection.leadsItems', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section10.collection.leadsItems', { returnObjects: true }))}
           <div class="bg-orange-50 border-l-4 border-orange-500 p-3 rounded mt-3">
             <p class="text-sm text-gray-800"><i class="fas fa-info-circle text-orange-500 mr-2"></i><strong>${t('section10.collection.important')}</strong> ${t('section10.collection.note')}</p>
           </div>
@@ -507,16 +561,12 @@ function updateMainContent() {
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section10.usage.title')}</h3>
           <p class="text-gray-700">${t('section10.usage.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section10.usage.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section10.usage.items', { returnObjects: true }))}
         </div>
         <div>
           <h3 class="font-bold text-gray-900 mb-2">${t('section10.rights.title')}</h3>
           <p class="text-gray-700">${t('section10.rights.intro')}</p>
-          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-            ${t('section10.rights.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          ${renderList(t('section10.rights.items', { returnObjects: true }))}
           <p class="text-gray-700 mt-2">${t('section10.rights.contact')} <a href="mailto:contact@real-estate-referrer.com" class="text-[#2563eb] hover:underline">contact@real-estate-referrer.com</a></p>
         </div>
         <div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded">
@@ -577,14 +627,15 @@ function updateMainContent() {
 
 // Handle TOC clicks
 document.addEventListener('click', function(e) {
-  if (e.target.matches('.toc-link')) {
+  if (e.target.matches('.toc-link') || e.target.closest('.toc-link')) {
     e.preventDefault();
-    const targetId = e.target.getAttribute('href');
+    const link = e.target.matches('.toc-link') ? e.target : e.target.closest('.toc-link');
+    const targetId = link.getAttribute('href');
     const targetSection = document.querySelector(targetId);
     if (targetSection) {
       targetSection.scrollIntoView({ behavior: 'smooth' });
       document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
-      e.target.classList.add('active');
+      link.classList.add('active');
     }
   }
 });
