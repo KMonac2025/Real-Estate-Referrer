@@ -1,465 +1,399 @@
+# 📋 README COMPLET - Real Estate Referrer
 
-# 📋 README v11.0.0 - Real Estate Referrer Application
-
-**Version mise à jour avec les traductions du Dashboard Apporteur** 🎉
-
----
-
-README v11.0.0 - Real Estate ReferrerDocument **📋 README - Real Estate Referrer Application**
-
-**Dernière mise à jour** : 23 octobre 2025 - 14:00  
-**Version** : 11.0.0  
-**Status** : 🟢 **Dashboard Apporteur 100% traduit en 8 langues - Ready for Admin Dashboard translation**
+**Date de mise à jour** : 23 octobre 2025  
+**Version** : 3.0.0  
+**Statut** : 🟡 **Fonctionnel sur Chrome/Firefox/Edge - ⚠️ Problème Safari**
 
 ---
 
-## 🎯 RÉSUMÉ RAPIDE - OÙ EN SUIS-JE ?
+## 🌐 INFORMATIONS GÉNÉRALES
 
-**État actuel** : Le Dashboard Apporteur fonctionne parfaitement en 8 langues ! ✅
-
-**Ce qui fonctionne** :
-- ✅ Landing page (8 langues)
-- ✅ How it works (8 langues)
-- ✅ Terms (8 langues)
-- ✅ Privacy (8 langues)
-- ✅ Authentification complète (8 langues)
-- ✅ **Dashboard Apporteur (8 langues)** - Stats, table, boutons, modal - **NOUVEAU v11.0.0**
-
-**Prochaine action IMMÉDIATE** :
-1. 🎯 Traduire le Dashboard Admin (8 langues)
-2. 📝 Ajouter les drapeaux dans le header du dashboard
-3. 🚀 Atteindre 80-85% de traductions !
-
-**Temps estimé** : 3-4 heures pour le dashboard admin
-
-**Résultat attendu** : **80% du site traduit !** 🚀
-
-**Progression actuelle : 70% du site traduit** ✅
-
----
-
-## 📌 Description du Projet
-
-Application web complète de gestion d'apporteurs d'affaires pour agent immobilier à Dubai. Permet de recruter des apporteurs, gérer les leads clients, suivre les ventes et calculer automatiquement les commissions.
-
----
-
-## 🆕 NOUVEAUTÉS v11.0.0
-
-**Dashboard Apporteur 100% traduit en 8 langues** 🎉
-
-- ✅ **8 fichiers dashboard.json créés** (~1600 lignes de traductions)
-- ✅ **Stats traduites** : "Total Earnings", "Active Leads", "Closed Sales"
-- ✅ **Bouton "Add Lead" traduit** en 8 langues
-- ✅ **Table "My Leads" complète** : headers, statuts, badges
-- ✅ **Modal "Add Lead" 100% traduit** : tous les champs, labels, placeholders, boutons
-- ✅ **Messages de succès/erreur** traduits
-- ✅ **Types de propriété** traduits (Apartment, Villa, Townhouse, Penthouse, Studio)
-- ✅ **Statuts de leads** traduits (Nouveau, Visite, Offre, Vendu, Loué)
-- ✅ **Erreur JavaScript résolue** : Ajout de `window.render = render`
-- ✅ **Application 100% fonctionnelle**
-- ✅ **Testé en production** : RU, TL, ZH, UR, HI ✅
-
-**Commits v11.0.0** :
-- `feat(i18n): create dashboard.json for 8 languages`
-- `feat(i18n): translate referrer dashboard to 8 languages`
-- `feat(i18n): translate add lead modal to 8 languages`
-- `fix: expose render function to window`
-
-**Status** : 🟢 **Déployé et fonctionnel en production**
-
----
-
-## 🌐 Accès et URLs
-
+### URLs
 - **Site web** : https://real-estate-referrer.com
 - **GitHub** : https://github.com/KdC98/Real-Estate-Referrer
 - **Supabase** : https://cgizcgwhwxswvoodqver.supabase.co
+- **Vercel** : Déploiement automatique depuis GitHub
 
-**Compte Admin**
-- **Email** : admin@realestate-referrer.com
-- **UUID** : 68817a49-b31c-4edf-85fe-691eb33d6014
+### Comptes
+**Admin** :
+- Email : karyne.declercq@icloud.com
+- UUID : e9a7f64f-49e2-41fd-86ef-2a37f63...
+- Role : `admin`
+- Contract Status : `validated`
 
----
-
-## 🏗️ ARCHITECTURE DU PROJET
-
-**L'application est une Single Page Application (SPA)**
-
-```
-/
-├── index.html ⭐ (SPA - Landing + Auth + Dashboards)
-├── how-it-works.html (Page statique)
-├── terms.html (Page statique)
-├── privacy.html (Page statique)
-├── reset-password.html (Page statique)
-└── contract-template.html (Page statique)
-```
-
-**Ce qui est dans index.html** :
-- ✅ Landing page
-- ✅ Formulaires d'authentification (login, signup, reset)
-- ✅ **Dashboard apporteur** - **100% TRADUIT v11.0.0**
-- ⏳ Dashboard admin - **À traduire**
-- ✅ Modal "Ajouter un lead" - **100% TRADUIT v11.0.0**
+**Apporteur Test** :
+- Email : karyne@itooki.fr
+- Role : `referrer`
 
 ---
 
-## ✅ ÉTAT ACTUEL DU PROJET (23 oct 2025 - 14:00)
+## ✅ ÉTAT ACTUEL DU PROJET (23 OCT 2025)
 
-### 🌍 Système Multilingue i18next - 8 LANGUES
+### 🟢 FONCTIONNEL
+- ✅ **Authentification Supabase** : Connexion/Déconnexion/Inscription
+- ✅ **Dashboard Admin** : Stats, gestion leads, validation contrats
+- ✅ **Dashboard Apporteur** : Stats personnelles, ajout leads
+- ✅ **Système de contrats** : Upload PDF, validation admin requise
+- ✅ **Multi-langues (i18next)** : 8 langues (FR, EN, AR, RU, HI, UR, ZH, TL)
+- ✅ **Calcul commissions** : 20% auto sur ventes/locations
+- ✅ **Compatible** : Chrome, Firefox, Edge, Brave
 
-**Langues supportées** :
-- ✅ 🇫🇷 **Français (FR)** - Langue par défaut
-- ✅ 🇬🇧 **Anglais (EN)** - Langue internationale
-- ✅ 🇦🇪 **Arabe (AR)** - Langue locale Dubai
-- ✅ 🇷🇺 **Russe (RU)** - Investisseurs
-- ✅ 🇮🇳 **Hindi (HI)** - Communauté indienne
-- ✅ 🇵🇰 **Ourdou (UR)** - Communauté pakistanaise
-- ✅ 🇨🇳 **Chinois simplifié (ZH)** - Investisseurs chinois
-- ✅ 🇵🇭 **Tagalog (TL)** - Communauté philippine (termes natifs)
+### 🔴 PROBLÈMES EN COURS
 
-**Structure des fichiers** :
-
-```
-/locales/
-├── fr/
-│   ├── translation.json ✅
-│   ├── how-it-works.json ✅
-│   ├── terms.json ✅
-│   ├── privacy.json ✅
-│   ├── auth.json ✅
-│   └── dashboard.json ✅ (NOUVEAU v11.0.0)
-├── en/ (idem × 6 fichiers)
-├── ar/ (idem × 6 fichiers)
-├── ru/ (idem × 6 fichiers)
-├── hi/ (idem × 6 fichiers)
-├── ur/ (idem × 6 fichiers)
-├── zh/ (idem × 6 fichiers)
-└── tl/ (idem × 6 fichiers)
-```
-
-**Total actuel** : **48 fichiers JSON** (8 langues × 6 sections)
+**1. Safari - Écran bleu au chargement**
+- **Symptôme** : Page reste bloquée sur fond bleu, JavaScript ne s'exécute pas
+- **Erreur** : `ReferenceError: Can't find variable: currentUser`
+- **Cause probable** : Erreur de syntaxe JavaScript stricte Safari OU timeout trop court
+- **Solution testée** : Augmentation timeout de 100ms à 300ms (ligne 675)
+- **Statut** : NON RÉSOLU
 
 ---
 
-## 🎨 Interface utilisateur - DÉTAIL
+## 🏗️ ARCHITECTURE TECHNIQUE
 
-### ✅ Pages TRADUITES ET DÉPLOYÉES
-
-1. **index.html - Landing page** ✅ (8 langues)
-   - Hero section, Stats, Exemples de gains, Footer, Sélecteur 8 langues
-
-2. **how-it-works.html** ✅ (8 langues)
-   - 5 étapes, FAQ complète, Exemples concrets
-
-3. **terms.html** ✅ (8 langues)
-   - 13 sections juridiques, Table des matières interactive
-
-4. **privacy.html** ✅ (8 langues)
-   - Sections clés traduites, RGPD complet
-
-5. **Authentification** ✅ (dans index.html) - 8 langues
-   - Login, Signup, Reset password, Messages d'erreur/succès
-
-6. **Dashboard Apporteur** ✅ (dans index.html) - **100% TRADUIT v11.0.0** - 8 langues
-   - ✅ 3 cartes de stats (Total Earnings, Active Leads, Closed Sales)
-   - ✅ Bouton "Add Lead"
-   - ✅ Table "My Leads" (5 colonnes : Client, Property, Budget, Status, Commission)
-   - ✅ Badges de statut colorés (Nouveau, Visite, Offre, Vendu, Loué)
-   - ✅ Modal "Add Lead" complet :
-     - Lead Type (Sale/Rental - Buyer/Seller/Tenant/Landlord)
-     - Client Name, Email, Phone
-     - Property Type (Apartment, Villa, Townhouse, Penthouse, Studio)
-     - Budget (AED) / Annual Rent (AED)
-     - Boutons Submit/Cancel
-   - ✅ Messages de validation
-   - ✅ **Testé en production : RU, TL, ZH, UR, HI** ✅
-
-### ⏳ FONCTIONNALITÉS À TRADUIRE
-
-7. **Dashboard Admin** ⏳ **PRIORITÉ 1** (dans index.html)
-   - Stats globales (4 cartes)
-   - Onglets (Leads / Contrats)
-   - Table des leads
-   - Table des contrats
-   - Actions admin
-   - Dropdowns de statut
-   - Boutons d'action
-
-### ⏳ Pages STATIQUES restantes
-
-8. **reset-password.html** ⏳
-   - Page de changement de mot de passe (après email)
-
-9. **contract-template.html** ⏳
-   - Template de contrat à télécharger
-
----
-
-## 📊 Base de données - COMPLET
-
-**Structure PostgreSQL via Supabase**
-
-**Table profiles**
-- id, name, phone, role, created_at
-- contract_status, contract_file_url
-
-**Table leads**
-- id, referrer_id, lead_type
-- client_name, client_email, client_phone
-- property_type, budget, annual_rent
-- status, sale_price, agent_commission, referrer_commission
-- created_at, closed_at
-
----
-
-## 💰 Système de commissions - COMPLET
-
-```
-Vente immobilière
-└─ Commission totale : 2% du prix de vente
-   ├─ Agence : 50%
-   └─ Agent : 50%
-      ├─ Apporteur : 20% (de la part agent)
-      └─ Vous : 80% (de la part agent)
-```
-
----
-
-## 🚀 Déploiement
-
-**Stack technique**
-- **Frontend** : React 18 (ESM modules via CDN)
+### Stack
+- **Frontend** : React 18 (ESM via CDN)
 - **Styling** : Tailwind CSS (via CDN)
-- **i18next** : Via CDN (multilingue)
-- **Backend/Auth** : Supabase (PostgreSQL + Auth)
-- **Hébergement** : Vercel
-- **Contrôle de version** : GitHub
-- **Architecture** : Single Page Application (SPA)
+- **i18n** : i18next + i18next-http-backend + i18next-browser-languagedetector
+- **Backend** : Supabase (PostgreSQL + Auth + Storage)
+- **Hosting** : Vercel (déploiement auto depuis GitHub)
 
-**Status déploiement** : 🟢 **Opérationnel** (région iad1)
+### Structure Base de Données
 
----
-
-## 🎯 NEXT STEPS
-
-### 🔴 PRIORITÉ 1 - Cette semaine (3-4h)
-
-**1. Traduire Dashboard Admin**
-
-Ajouter dans dashboard.json (8 langues) :
-- Labels stats admin (4 cartes)
-- Onglets (Leads / Contrats)
-- En-têtes tables admin
-- Actions admin (Valider, Rejeter, Marquer vendu)
-- Dropdowns de statut
-- Messages de confirmation admin
-
-**Résultat attendu** : **80% du site traduit** 🚀
-
-### 🟡 PRIORITÉ 2 - Semaine prochaine (1-2h)
-
-**2. Ajouter drapeaux dans le dashboard**
-
-- Ajouter sélecteur 8 langues dans le header du dashboard
-- Permettre changement de langue sans déconnexion
-
-**3. Traduire pages statiques restantes**
-
-- ⏳ reset-password.html
-- ⏳ contract-template.html
-
-**Résultat attendu** : **85-90% du site traduit** 🎉
-
-### 🟢 PRIORITÉ 3 - Avant lancement public
-
-**4. Améliorations**
-- Support RTL pour arabe/ourdou
-- Corriger erreurs 400/406 (RLS)
-- Bandeau cookies RGPD
-- 2FA avec Itooki.fr
-- Conformité RERA
-
----
-
-## 📈 PROGRESSION GLOBALE
-
-**Fonctionnalités** : 90% ✅
-
-**Traductions** :
-- Pages statiques : 67% ✅ (4/6)
-- Fonctionnalités SPA : 80% ✅ (landing + auth + dashboard apporteur done, dashboard admin pending)
-- **Global : ~70%** ✅
-
-**PROGRESSION TOTALE : 92%** 🚀
-
----
-
-## 📊 STATISTIQUES DU PROJET
-
-**Fichiers de traduction** :
-- **48 fichiers JSON** créés (8 langues × 6 sections)
-- **~10,000 lignes** de traductions (+1,500 depuis v10.4.0)
-- **6 sections traduites** (landing, how-it-works, terms, privacy, auth, dashboard)
-
-**Architecture** :
-- **1 SPA** (index.html) avec 5 sections
-- **5 pages statiques** (dont 4 traduites)
-
-**Temps investi** : ~32-36 heures
-
----
-
-## 🎉 HISTORIQUE DU PROJET
-
-### **23 octobre 2025 - v11.0.0** 🎊
-
-**🎊 Dashboard Apporteur 100% traduit en 8 langues**
-
-**Modifications** :
-- ✅ Création de 8 fichiers dashboard.json (~1,600 lignes)
-- ✅ Traduction complète de loadReferrerDashboard()
-- ✅ Traduction complète de showAddLeadForm()
-- ✅ Ajout namespace 'dashboard' à i18next config
-- ✅ Résolution erreur JavaScript : `window.render = render`
-
-**Structure dashboard.json** :
-- referrer.stats (totalEarnings, activeLeads, closedSales, currency)
-- referrer.actions (addLead, refresh, logout)
-- referrer.table (title, headers, empty)
-- referrer.status (nouveau, visite, offre, vendu)
-- referrer.propertyTypes (apartment, villa, townhouse, penthouse, studio)
-- modal.addLead (title, form, buttons, messages, validation)
-
-**Commits** :
-- `feat(i18n): create dashboard.json for 8 languages`
-- `feat(i18n): translate referrer dashboard to 8 languages`
-- `feat(i18n): translate add lead modal to 8 languages`
-- `fix: expose render function to window`
-
-**Tests effectués** :
-- ✅ Français (FR) - Complet
-- ✅ Anglais (EN) - Complet
-- ✅ Russe (RU) - Complet
-- ✅ Tagalog (TL) - Complet avec termes natifs
-- ✅ Chinois (ZH) - Complet
-- ✅ Ourdou (UR) - Complet
-- ✅ Hindi (HI) - Complet
-
-**Status** : 🟢 **Déployé et testé en production**
-
-### **22 octobre 2025 - v10.4.0** 🎯
-
-**🎯 Corrections validation mot de passe + améliorations traductions**
-- Regex mot de passe : 8 chars min (au lieu de 12)
-- Chiffre non obligatoire
-- Placeholders email traduits (8 langues)
-- Améliorations Tagalog/Urdu/Arabe
-
-### **22 octobre 2025 - v10.3.1** 🔧
-
-**🔧 Correction namespace auth**
-- Ajout { ns: 'auth' } dans 3 fonctions
-
-### **20 octobre 2025 - v8.0.0 - v10.0.0** 🎉
-
-**🎉 Déploiement pages statiques**
-- Privacy Policy, Terms, How it works (8 langues)
-- Système multilingue 8 langues opérationnel
-
----
-
-## 📞 PROCHAINE SESSION
-
-**Objectif principal** : Traduire le Dashboard Admin
-
-**À faire** :
-1. ✅ Dashboard Apporteur validé et fonctionnel
-2. 🎯 Compléter dashboard.json avec sections admin
-3. 🎯 Modifier loadAdminDashboard() pour utiliser les traductions
-4. 🎯 Tester en production
-
-**Résultat attendu** : **80% du site traduit !** 🚀
-
----
-
-## 🔄 POUR REPRENDRE LE PROJET
-
-**Dans une nouvelle conversation avec Claude :**
-
-**Prompt à utiliser** :
-
-```
-Bonjour Claude ! Je reprends mon projet Real Estate Referrer.
-
-Voici le README v11.0.0 complet.
-
-État actuel : Le Dashboard Apporteur fonctionne parfaitement en 8 langues ! ✅
-
-Prochaine étape : Je veux traduire le Dashboard Admin en 8 langues.
-
-Peux-tu m'aider à :
-1. Compléter les fichiers dashboard.json avec les sections admin
-2. Identifier toutes les chaînes à traduire dans loadAdminDashboard()
-3. Modifier le code pour utiliser les traductions
-
-[Coller le README v11.0.0 ici]
+**Table `profiles`**
+```sql
+- id UUID PRIMARY KEY (référence auth.users)
+- name TEXT
+- phone TEXT
+- role TEXT ('admin' ou 'referrer')
+- contract_status TEXT ('pending', 'uploaded', 'validated', 'rejected')
+- contract_file_url TEXT
+- created_at TIMESTAMP
 ```
 
-**Documents à fournir** :
-- ✅ Ce README v11.0.0
-- ✅ Screenshot du dashboard admin (si besoin)
+**Table `leads`**
+```sql
+- id BIGSERIAL PRIMARY KEY
+- referrer_id UUID (référence auth.users)
+- lead_type TEXT ('Sale - Buyer', 'Sale - Seller', 'Rental - Tenant', 'Rental - Landlord')
+- client_name TEXT
+- client_email TEXT
+- client_phone TEXT
+- property_type TEXT
+- budget NUMERIC (pour ventes)
+- annual_rent NUMERIC (pour locations)
+- status TEXT ('nouveau', 'visite', 'offre', 'vendu', 'loué')
+- sale_price NUMERIC
+- agent_commission NUMERIC
+- referrer_commission NUMERIC
+- created_at TIMESTAMP
+- closed_at TIMESTAMP
+```
+
+### Fichiers Traductions
+**Structure** : `/locales/{langue}/{namespace}.json`
+
+Namespaces :
+- `translation.json` : Landing page
+- `auth.json` : Pages authentification
+- `dashboard.json` : Dashboards admin/apporteur
+
+Langues supportées :
+- 🇫🇷 Français (fr)
+- 🇬🇧 English (en)
+- 🇦🇪 العربية (ar)
+- 🇷🇺 Русский (ru)
+- 🇮🇳 हिन्दी (hi)
+- 🇵🇰 اردو (ur)
+- 🇨🇳 中文 (zh)
+- 🇵🇭 Tagalog (tl)
 
 ---
 
-## 🆘 DÉPANNAGE RAPIDE
+## 🔧 MODIFICATIONS RÉCENTES
 
-**Problème : Bouton "Déconnexion" ne fonctionne pas**
+### Migration i18next (23 octobre)
+**Commit** : `feat: add multi-language support with i18next`
+- Ajout de 8 langues complètes
+- Structure `/locales/{lng}/{ns}.json`
+- Détection automatique langue navigateur
+- Sélecteur de langue avec drapeaux emoji
 
-**Solution** : Console → `localStorage.clear(); location.reload();`
+### Fix Authentification
+**Commit** : `fix: make supabase globally accessible`
+- Ligne 68 : `window.supabase = supabase;`
+- Résolu : `ReferenceError: Can't find variable: supabase`
 
-**Problème : Safari bloqué (écran bleu)**
+### Fix Form Submit
+**Commit** : `fix: attach form event with setTimeout`
+- Remplacement `form.onsubmit` par `form.addEventListener('submit')`
+- Ajout `setTimeout(() => {...}, 300)` pour compatibilité Safari
+- Lignes 644-675
 
-**Solution** : Utilise Chrome ou Firefox à la place
-
-**Problème : Traductions ne s'affichent pas**
-
-**Actions** :
-1. Vide le cache (Ctrl+Shift+R ou Cmd+Shift+R)
-2. Vérifie la console F12
-3. Vérifie que dashboard.json se charge (Network tab)
-
----
-
-## 🎊 FÉLICITATIONS !
-
-**Ce que tu as accompli (23 octobre 2025)** :
-
-- ✅ Créé 8 fichiers dashboard.json (~1,600 lignes)
-- ✅ Traduit le dashboard apporteur en 8 langues
-- ✅ Traduit le modal "Add Lead" en 8 langues
-- ✅ Résolu l'erreur JavaScript critique
-- ✅ Testé en production (5 langues)
-- ✅ Dashboard 100% fonctionnel en 8 langues !
-
-**Statistiques du projet** :
-- ✅ 48 fichiers JSON (8 langues × 6 sections)
-- ✅ ~10,000 lignes de traductions
-- ✅ 6 sections traduites
-- ✅ **70% du site traduit**
-
-**Ce qui reste à faire** :
-- 🎯 Traduire dashboard admin (3-4h) → 80%
-- 🎯 Pages statiques restantes (1-2h) → 85%
-- 🎯 Améliorations finales (5-10h) → 90-95%
-
-**Tu es à 92% du projet ! Plus que 8% à faire ! 🚀**
+**Commit** : `fix: correct syntax error in setTimeout`
+- Correction ligne 673 : `});` pour fermer addEventListener
 
 ---
 
-**Dernière mise à jour** : 23 octobre 2025 - 14:00  
-**Version** : 11.0.0  
-**Status** : 🟢 **Dashboard Apporteur 100% functional in 8 languages - Ready for Admin Dashboard**
+## 🚨 PROBLÈMES CONNUS & SOLUTIONS
 
+### 1. Safari - Écran bleu (EN COURS)
 
+**Symptômes** :
+- Page bloque sur fond bleu
+- `currentUser` non défini
+- JavaScript ne s'exécute pas
+
+**Diagnostics effectués** :
+- ✅ i18next se charge (visible dans console)
+- ✅ Supabase se charge
+- ❌ Variables globales non créées (`currentUser`, `userProfile`, etc.)
+
+**À tester** :
+1. Vérifier erreurs Safari : Onglet "Erreurs" console
+2. Augmenter timeout : `setTimeout(() => {...}, 500)` au lieu de 300
+3. Utiliser `requestAnimationFrame` + `setTimeout`
+4. Vérifier compatibilité syntaxe ES6 stricte Safari
+
+### 2. RLS Désactivé (Sécurité)
+
+**Statut** : ⚠️ NON CRITIQUE mais recommandé avant production publique
+
+**Situation** :
+- Row Level Security désactivé sur `profiles` et `leads`
+- Tous utilisateurs authentifiés peuvent lire/modifier toutes données
+
+**Solution prévue** :
+```sql
+-- Créer fonction admin sécurisée
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Réactiver RLS
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+
+-- Ajouter politiques (voir README RER 16102025.docx pour détails)
+```
+
+---
+
+## 📝 CHECKLIST AVANT LANCEMENT PUBLIC
+
+### 🔴 Critique - À faire MAINTENANT
+- [ ] **Résoudre problème Safari** (bloquant pour utilisateurs Mac/iPhone)
+- [ ] Créer CGU (Conditions Générales d'Utilisation)
+- [ ] Créer Politique de Confidentialité (RGPD)
+- [ ] Créer page "Comment ça marche"
+
+### 🟡 Important - Avant lancement
+- [ ] Réactiver RLS avec fonction `is_admin()`
+- [ ] Tester toutes fonctionnalités avec RLS activé
+- [ ] Changer mot de passe admin (utiliser gestionnaire mots de passe)
+- [ ] Configurer email personnalisé (domaine custom)
+- [ ] Créer templates email professionnels
+
+### 🟢 Conformité RERA Dubai - Critique
+- [ ] Obtenir licence RERA
+- [ ] Passer examen DREI
+- [ ] Obtenir permis publicitaire Trakheesi (5,000 AED)
+- [ ] Signer Form A avec propriétaires
+- [ ] ⚠️ **Amendes jusqu'à 50,000 AED si non-conforme !**
+
+### 🔵 Nice to have
+- [ ] Remplacer "Dubai Real Estate" par nom d'agence
+- [ ] Ajouter logo personnalisé
+- [ ] Tests utilisateurs avec 2-3 apporteurs bêta
+- [ ] Système de notifications email automatiques
+
+---
+
+## 🐛 GUIDE TROUBLESHOOTING
+
+### Problème : Écran bleu infini
+
+**Chrome/Firefox** :
+1. Ouvrir console (F12)
+2. Regarder erreurs rouges
+3. Taper `currentUser` → doit retourner un objet ou null
+4. Taper `render()` → doit afficher la page
+
+**Safari** :
+1. Ouvrir console (Cmd+Option+C)
+2. Onglet "Erreurs" → noter TOUTES les erreurs
+3. Vider cache : Cmd+Option+E
+4. Recharger : Cmd+Shift+R
+
+### Problème : Impossible de se connecter
+
+1. Vérifier email/mot de passe corrects
+2. Console : regarder erreur Supabase
+3. Supabase Dashboard → Table `profiles` → vérifier profil existe
+4. Vérifier `role` = 'admin' ou 'referrer'
+
+### Problème : Page contrat au lieu de dashboard
+
+**Cause** : Profil mal configuré dans Supabase
+
+**Solution** :
+1. Supabase Dashboard → Table `profiles`
+2. Trouver ligne utilisateur
+3. Vérifier/modifier :
+   - `role` = 'admin' (pour admin) ou 'referrer'
+   - `contract_status` = 'validated' (si admin)
+4. Déconnexion + Reconnexion
+
+### Problème : Formulaire "Add Lead" ne fonctionne pas
+
+**Chrome/Firefox** :
+1. Console : chercher erreurs `addEventListener`
+2. Vérifier timeout ligne 675 : doit être `}, 300);`
+
+**Solution temporaire** :
+```javascript
+// Dans console
+document.getElementById('addLeadForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Test!');
+});
+```
+
+---
+
+## 📞 COMMANDES SQL UTILES
+
+### Voir tous les profils
+```sql
+SELECT * FROM profiles;
+```
+
+### Voir leads avec noms d'apporteurs
+```sql
+SELECT 
+  l.*,
+  p.name as referrer_name
+FROM leads l
+LEFT JOIN profiles p ON l.referrer_id = p.id;
+```
+
+### Statistiques globales
+```sql
+SELECT
+  COUNT(*) as total_leads,
+  SUM(CASE WHEN status IN ('vendu', 'loué') THEN 1 ELSE 0 END) as ventes,
+  SUM(referrer_commission) as commissions_totales
+FROM leads;
+```
+
+### Changer rôle utilisateur
+```sql
+UPDATE profiles 
+SET role = 'admin' 
+WHERE id = 'UUID_ICI';
+```
+
+### Valider contrat
+```sql
+UPDATE profiles 
+SET contract_status = 'validated' 
+WHERE id = 'UUID_ICI';
+```
+
+---
+
+## 🎯 PROCHAINES ÉTAPES
+
+### Immédiat (cette semaine)
+1. **RÉSOUDRE SAFARI** : Priorité absolue
+2. Rédiger CGU et Politique Confidentialité
+3. Créer page "Comment ça marche"
+
+### Court terme (2 semaines)
+4. Réactiver RLS
+5. Tester avec utilisateurs bêta
+6. Configurer emails personnalisés
+
+### Moyen terme (1 mois)
+7. Obtenir conformité RERA
+8. Lancement public
+9. Campagne recrutement apporteurs
+
+---
+
+## 📚 RESSOURCES
+
+### Documentation
+- **Supabase** : https://docs.supabase.com
+- **i18next** : https://www.i18next.com/
+- **Tailwind CSS** : https://tailwindcss.com/docs
+- **Vercel** : https://vercel.com/docs
+
+### RERA Dubai
+- **Site officiel** : https://www.dubailand.gov.ae
+- **Licence RERA** : Obligatoire pour agents immobiliers
+- **Amendes** : Jusqu'à 50,000 AED pour non-conformité
+
+---
+
+## 🔑 CREDENTIALS & ACCESS
+
+**Supabase**
+- URL : https://cgizcgwhwxswvoodqver.supabase.co
+- Anon Key : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+**GitHub**
+- Repo : https://github.com/KdC98/Real-Estate-Referrer
+- Branch : main
+- Auto-deploy : Vercel
+
+**Domaine**
+- Provider : OVH
+- Domain : real-estate-referrer.com
+- DNS : Configuré pour Vercel
+
+---
+
+## 📝 HISTORIQUE VERSIONS
+
+**v3.0.0 (23 oct 2025)** - Multi-langues
+- Ajout i18next avec 8 langues
+- Migration complète traductions
+- ⚠️ Problème Safari introduit
+
+**v2.1.0 (16 oct 2025)** - Stable
+- Désactivation RLS
+- Correction affichage noms apporteurs
+- Application fonctionnelle
+
+**v2.0.0 (15 oct 2025)** - Migration Supabase
+- Migration vers Supabase Auth
+- Système de contrats
+- Calcul commissions automatique
+
+**v1.0.0 (14-15 oct 2025)** - Création
+- Setup initial
+- Premiers problèmes d'authentification
+
+---
+
+## 🆘 EN CAS DE PROBLÈME
+
+**Si rien ne fonctionne** :
+1. GitHub → Commits → Revert vers dernier commit stable
+2. Attendre 2-3 min déploiement Vercel
+3. Vider cache navigateur
+4. Tester
+
+**Dernier commit stable connu** :
+- Date : 23 octobre 2025 (avant fix Safari)
+- Message : `fix: increase timeout for Safari compatibility`
+
+**Contact support** :
+- Continuer conversation Claude avec ce README
