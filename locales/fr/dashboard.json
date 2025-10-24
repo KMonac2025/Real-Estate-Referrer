@@ -29,7 +29,8 @@
       "visite": "Visite",
       "offre": "Offre",
       "vendu": "Vendu",
-      "perdu": "Perdu"
+      "perdu": "Perdu",
+      "loue": "Loué"
     },
     "propertyTypes": {
       "apartment": "Appartement",
@@ -88,6 +89,7 @@
       "form": {
         "leadType": {
           "label": "Type de lead",
+          "placeholder": "Choisissez le type",
           "sale": "Vente",
           "rent": "Location"
         },
