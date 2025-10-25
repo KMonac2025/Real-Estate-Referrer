@@ -221,13 +221,23 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.passwordLabel') : ta('signup.passwordLabel')}</label>
-                                    <input type="password" name="password" required minlength="12" placeholder="${isLogin ? ta('login.passwordPlaceholder') : ta('signup.passwordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                                    <p class="text-xs text-gray-400 mt-1">${isLogin ? ta('login.passwordHint') : ta('signup.passwordHint')}</p>
+                                    <div class="relative">
+                                        <input type="password" id="passwordField" name="password" required minlength="8" placeholder="${isLogin ? ta('login.passwordPlaceholder') : ta('signup.passwordPlaceholder')}" class="w-full px-4 py-2 pr-12 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                        <button type="button" onclick="togglePasswordVisibility('passwordField', this)" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition">
+                                            <span class="text-xl">👁️</span>
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-400 mt-1">${isLogin ? ta('login.passwordHint') : 'Minimum 8 caractères'}</p>
                                 </div>
                                 ${!isLogin ? `
                                     <div>
                                         <label class="block text-sm font-medium mb-2">${ta('signup.confirmPasswordLabel')}</label>
-                                        <input type="password" name="confirmPassword" required minlength="12" placeholder="${ta('signup.confirmPasswordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                        <div class="relative">
+                                            <input type="password" id="confirmPasswordField" name="confirmPassword" required minlength="8" placeholder="${ta('signup.confirmPasswordPlaceholder')}" class="w-full px-4 py-2 pr-12 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                            <button type="button" onclick="togglePasswordVisibility('confirmPasswordField', this)" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition">
+                                                <span class="text-xl">👁️</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 ` : ''}
                                 <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
@@ -766,12 +776,11 @@
                 if (mode === 'signup') {
                     const confirmPassword = formData.get('confirmPassword');
                     if (password !== confirmPassword) {
-                        alert(ta('signup.errors.passwordMismatch'));
+                        alert('❌ Les mots de passe ne correspondent pas\n\n✅ Solution : Vérifiez que les deux champs sont identiques\n💡 Utilisez le bouton 👁️ pour voir vos mots de passe');
                         return;
                     }
-                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{12,}$/;
-                    if (!passwordRegex.test(password)) {
-                        alert(ta('signup.errors.passwordInvalid'));
+                    if (password.length < 8) {
+                        alert('❌ Mot de passe trop court\n\n✅ Minimum requis : 8 caractères\n📝 Votre mot de passe : ' + password.length + ' caractères\n\n💡 Exemples valides :\n• monmotdepasse\n• Password123\n• 12345678');
                         return;
                     }
                     const { data, error } = await supabase.auth.signUp({
@@ -785,19 +794,27 @@
                         }
                     });
                     if (error) {
+                        console.error('Erreur inscription:', error);
                         if (error.message && error.message.toLowerCase().includes('already')) {
-                            alert(ta('signup.errors.emailExists'));
+                            alert('❌ Ce compte existe déjà\n\n✅ Solution : Utilisez "Connexion" avec cet email\n💡 Si vous avez oublié votre mot de passe, cliquez sur "Mot de passe oublié ?"');
                         } else {
-                            alert(ta('signup.errors.networkError'));
+                            alert('❌ Erreur lors de l\'inscription\n\n' + error.message + '\n\n💡 Vérifiez votre connexion internet et réessayez');
                         }
                     } else {
-                        alert(ta('signup.success.accountCreated'));
+                        alert('✅ Compte créé avec succès !\n\n📧 Un email de confirmation a été envoyé à :\n' + email + '\n\n⚠️ IMPORTANT : Cliquez sur le lien dans l\'email avant de vous connecter\n\n💡 Vérifiez aussi vos Spams');
                         showLogin();
                     }
                 } else {
                     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                     if (error) {
-                        alert(ta('login.errors.invalidCredentials'));
+                        console.error('Erreur connexion:', error);
+                        if (error.message.toLowerCase().includes('email not confirmed')) {
+                            alert('❌ Email non confirmé\n\n✅ Solution : Vérifiez votre boîte mail et cliquez sur le lien de confirmation envoyé par Supabase.');
+                        } else if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('credentials')) {
+                            alert('❌ Email ou mot de passe incorrect\n\n✅ Vérifications :\n• Email exact (pas d\'espaces)\n• Mot de passe exact (attention maj/min)\n• Cliquez sur 👁️ pour voir votre mot de passe\n\n💡 Utilisez "Mot de passe oublié ?" si besoin');
+                        } else {
+                            alert('❌ Erreur de connexion\n\n' + error.message + '\n\n💡 Essayez de réinitialiser votre mot de passe');
+                        }
                     } else {
                         currentUser = data.user;
                         window.currentUser = data.user;
@@ -831,18 +848,24 @@
             const fileInput = document.querySelector('input[name="contract"]');
             const file = fileInput?.files[0];
             if (!file) {
-                alert('Fichier manquant');
+                alert('❌ Aucun fichier sélectionné\n\n✅ Solution : Cliquez sur "Choisir un fichier" et sélectionnez votre contrat signé (PDF)');
+                return;
+            }
+            if (!file.type.includes('pdf')) {
+                alert('❌ Format de fichier incorrect\n\n✅ Requis : Fichier PDF uniquement\n📝 Votre fichier : ' + file.type + '\n\n💡 Convertissez votre document en PDF avant de l\'envoyer');
                 return;
             }
             if (file.size > 5 * 1024 * 1024) {
-                alert('Fichier trop volumineux (max 5MB)');
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                alert('❌ Fichier trop volumineux\n\n📝 Taille de votre fichier : ' + sizeMB + ' MB\n✅ Maximum autorisé : 5 MB\n\n💡 Compressez votre PDF ou scannez en qualité réduite');
                 return;
             }
             const fileName = `${currentUser.id}_${Date.now()}.pdf`;
             try {
                 const { data: uploadData, error: uploadError } = await supabase.storage.from('contracts').upload(fileName, file);
                 if (uploadError) {
-                    alert('Erreur upload : ' + uploadError.message);
+                    console.error('Erreur upload:', uploadError);
+                    alert('❌ Erreur lors de l\'envoi du fichier\n\n' + uploadError.message + '\n\n💡 Vérifiez votre connexion internet et réessayez');
                     return;
                 }
                 const { data: urlData } = supabase.storage.from('contracts').getPublicUrl(fileName);
@@ -851,14 +874,16 @@
                     contract_file_url: urlData.publicUrl
                 }).eq('id', currentUser.id);
                 if (updateError) {
-                    alert('Erreur mise à jour : ' + updateError.message);
+                    console.error('Erreur mise à jour:', updateError);
+                    alert('❌ Erreur lors de la mise à jour\n\n' + updateError.message + '\n\n💡 Contactez le support si le problème persiste');
                 } else {
-                    alert('Contrat envoyé avec succès !');
+                    alert('✅ Contrat envoyé avec succès !\n\n⏳ Votre contrat est en attente de validation par l\'admin\n📧 Vous recevrez une notification par email une fois validé\n\n💡 Vous pouvez vous déconnecter en attendant');
                     await loadUserProfile();
                     render();
                 }
             } catch (error) {
-                alert('Erreur : ' + error.message);
+                console.error('Erreur générale:', error);
+                alert('❌ Erreur inattendue\n\n' + error.message + '\n\n💡 Rafraîchissez la page (F5) et réessayez');
             }
         }
         async function loadUserProfile() {
@@ -929,6 +954,18 @@
                 app.innerHTML = renderLandingPage();
             }
         }
+        function togglePasswordVisibility(fieldId, button) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                button.innerHTML = '<span class="text-xl">🙈</span>';
+            } else {
+                field.type = 'password';
+                button.innerHTML = '<span class="text-xl">👁️</span>';
+            }
+        }
         window.showLogin = showLogin;
         window.showSignup = showSignup;
         window.showReset = showReset;
@@ -938,6 +975,7 @@
         window.updateLeadStatus = updateLeadStatus;
         window.markAsSold = markAsSold;
         window.handleContractSubmit = handleContractSubmit;
+        window.togglePasswordVisibility = togglePasswordVisibility;
         window.render = render;
         supabase.auth.onAuthStateChange(async (event, session) => {
             currentUser = session?.user || null;
