@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.20.5 - Fix contract signed redirect + profile loading -->
+    <!-- Version: 3.20.6 - Fix: ne pas bloquer après signature contrat -->
     
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -51,7 +51,7 @@
     
     <script type="module">
         // ============================================
-        // v3.20.5 - Fix contract signed redirect + profile loading
+        // v3.20.6 - Fix: ne pas bloquer après signature contrat
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -65,7 +65,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.20.5...');
+            console.log('🚀 App starting v3.20.6...');
             
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = window.location.hash;
@@ -78,9 +78,6 @@
             if (isOAuthReturn) console.log('🔄 OAuth return detected');
             if (hasError) console.error('❌ OAuth error in URL');
             if (isContractSignedReturn) console.log('📝 Contract signed return detected');
-            
-            // ✅ v3.20.5: Ne pas effacer l'URL signed immédiatement
-            // On le fait APRÈS avoir rechargé le profil
             
             if (isOAuthReturn && !hasError) {
                 document.getElementById('app').innerHTML = `
@@ -169,7 +166,6 @@
             function wait2Frames() { return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
             function waitFonts() { return document.fonts?.ready || Promise.resolve(); }
             
-            // ✅ v3.20.5: Promise avec timeout amélioré
             function withTimeout(promise, ms, fallbackValue = null) {
                 return new Promise((resolve) => {
                     let settled = false;
@@ -348,17 +344,14 @@
                 };
             }
 
-            // ✅ v3.20.5: loadUserProfile amélioré avec gestion contractJustSigned
             async function loadUserProfile(user = null, forceRefresh = false) {
                 const u = user || currentUser;
                 console.log('🔍 loadUserProfile for:', u?.id, forceRefresh ? '(force refresh)' : '');
                 if (!u?.id) { console.warn('⚠️ No user for loadUserProfile'); return false; }
 
-                // ✅ v3.20.5: Si contractJustSigned, on sait que le contrat est signé
                 const defaultContractStatus = contractJustSigned ? 'signed' : 'pending';
                 console.log('📝 Default contract status:', defaultContractStatus);
 
-                // Créer un profil temporaire avec le bon contract_status
                 const tempProfile = {
                     id: u.id,
                     name: u.user_metadata?.full_name || u.user_metadata?.name || u.email?.split('@')[0] || 'User',
@@ -372,7 +365,6 @@
                 try {
                     console.log('📡 Fetching profile from Supabase...');
                     
-                    // Timeout de 5 secondes
                     const result = await withTimeout(
                         supabase.from('profiles').select('*').eq('id', u.id).maybeSingle(),
                         5000,
@@ -408,7 +400,6 @@
                         
                         if (insertResult?.data) {
                             userProfile = insertResult.data;
-                            // ✅ v3.20.5: Si contractJustSigned, forcer le statut même si l'insert a réussi
                             if (contractJustSigned && userProfile.contract_status !== 'signed') {
                                 console.log('📝 Forcing contract_status to signed');
                                 userProfile.contract_status = 'signed';
@@ -420,11 +411,9 @@
                         }
                     } else {
                         userProfile = data;
-                        // Nettoyer le contract_status
                         if (userProfile.contract_status) {
                             userProfile.contract_status = userProfile.contract_status.trim().replace(/\*+/g, '');
                         }
-                        // ✅ v3.20.5: Si contractJustSigned et le DB dit encore pending, forcer signed
                         if (contractJustSigned && userProfile.contract_status === 'pending') {
                             console.log('📝 DB has pending but contract was just signed, forcing signed');
                             userProfile.contract_status = 'signed';
@@ -467,18 +456,15 @@
 
                 const app = document.getElementById('app');
 
-                // ✅ v3.20.5: Gérer contractJustSigned avec notification
                 if (contractJustSigned && currentUser && userProfile) {
                     console.log('📝 Contract just signed, showing success notification');
                     contractJustSigned = false; 
                     window.contractJustSigned = false;
                     
-                    // Nettoyer l'URL maintenant que tout est chargé
                     if (window.location.search.includes('signed=')) {
                         window.history.replaceState(null, '', window.location.pathname);
                     }
                     
-                    // Afficher notification de succès
                     setTimeout(() => {
                         const d = document.createElement('div');
                         d.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce"><span class="text-3xl mr-2">✅</span><strong>Contrat signé avec succès !</strong></div>`;
@@ -503,9 +489,16 @@
                 if (currentUser && userProfile) {
                     const isComplete = RENDERING.isProfileComplete(userProfile);
                     
-                    console.log('📋 Profile check - isComplete:', isComplete, 'contract_status:', userProfile.contract_status, 'role:', userProfile.role);
+                    // ✅ v3.20.6: Vérifier si contrat signé pour ne pas bloquer
+                    const hasSignedContract = userProfile.contract_status === 'signed' || 
+                                              userProfile.contract_path || 
+                                              userProfile.contract_file_url ||
+                                              ['signed', 'validated', 'approved'].includes(userProfile.contract_status);
                     
-                    if (!isComplete && userProfile.role !== 'admin') {
+                    console.log('📋 Profile check - isComplete:', isComplete, 'hasSignedContract:', hasSignedContract, 'contract_status:', userProfile.contract_status, 'role:', userProfile.role);
+                    
+                    // ✅ v3.20.6: Ne bloquer avec modal QUE si pas de contrat signé
+                    if (!isComplete && userProfile.role !== 'admin' && !hasSignedContract) {
                         currentPage = 'profile-completion'; window.currentPage = 'profile-completion';
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
@@ -546,7 +539,7 @@
                         isRendering = false; return;
                     }
                     
-                    // ✅ Profil complet -> Dashboard
+                    // ✅ Profil complet OU contrat signé -> Dashboard
                     currentPage = 'dashboard'; window.currentPage = 'dashboard';
                     app.innerHTML = RENDERING.renderDashboard();
                     await DASHBOARD.loadDashboardContent();
@@ -558,7 +551,6 @@
                     
                     if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
                         console.log('⚠️ Max attempts reached, creating fallback profile');
-                        // ✅ v3.20.5: Fallback avec bon contract_status
                         const defaultStatus = contractJustSigned ? 'signed' : 'pending';
                         userProfile = {
                             id: currentUser.id,
@@ -655,7 +647,6 @@
                     currentUser = session.user;
                     window.currentUser = currentUser;
                     
-                    // ✅ v3.20.5: Force refresh si contractJustSigned
                     await loadUserProfile(currentUser, contractJustSigned);
                     
                     if (window.location.search.includes('code=') || window.location.hash.includes('access_token')) {
@@ -684,7 +675,6 @@
                     if (session?.user) {
                         currentUser = session.user;
                         window.currentUser = currentUser;
-                        // ✅ v3.20.5: Force refresh si contractJustSigned
                         await loadUserProfile(currentUser, contractJustSigned);
                         waitingForOAuth = false;
                         initialLoadComplete = true;
